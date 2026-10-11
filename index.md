@@ -18,11 +18,11 @@
 
 ## Installation
 
-Visit the app at: [https://no26062026-dotcom.github.io/Aself](https://no26062026-dotcom.github.io/Aself)
+Visit the app at: [https://bitno26.github.io/Aself](https://bitno26.github.io/Aself)
 
 Or clone the repository:
 ```bash
-git clone https://github.com/no26062026-dotcom/Aself.git
+git clone https://github.com/bitno26/Aself.git
 cd Aself
 ```
 
@@ -36,4 +36,4 @@ Built with JavaScript - a modern, lightweight web application.
 
 ---
 
-**Made with ❤️ by [no26062026-dotcom](https://github.com/no26062026-dotcom)**
+**Made with ❤️ by [bitno26](https://github.com/bitno26)**
