@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#243170">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icons/icon-192.png" type="image/png">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="الحضور">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<title>سجل متابعة الحضور</title>
+<link rel="stylesheet" href="style.css?v=1.1.3">
+</head>
+<body>
+
+<main class="app">
+    <header class="hero">
+        <h1>سجل متابعة الحضور</h1>
+
+        <div class="month-box">
+            <label for="month-sel">اختر الشهر</label>
+            <select id="month-sel" class="month-sel"></select>
+        </div>
+
+        <div class="dials">
+            <div class="timer-display" id="timer-card" data-state="green">
+                <p class="timer-value" id="main-hours">21:00</p>
+                <p class="timer-label" id="total-label">إجمالي الساعات</p>
+            </div>
+            <div class="timer-display" id="delay-card" data-state="green" style="--pct:0">
+                <p class="timer-value" id="stat-delay">07:00</p>
+                <p class="timer-label">ساعات بدون حسم</p>
+            </div>
+        </div>
+    </header>
+
+    <div id="error-log" class="error-msg" role="alert"></div>
+
+    <section class="panel">
+        <h2>حاسبة الوقت</h2>
+        <div class="time-calc-table">
+            <div class="time-calc-row">
+                <span>حد الحضور المتأخر من 7:30 إلى</span>
+                <div class="time-calc-input-wrap">
+                    <input type="text" id="calc-late-in" class="time-calc-input" readonly dir="ltr" placeholder="00:00" data-title="الوقت">
+                </div>
+                <span>:</span>
+                <span id="calc-late-out" class="calc-red">00:00</span>
+            </div>
+            <div class="time-calc-row">
+                <span>حد الخروج المبكر من</span>
+                <div class="time-calc-input-wrap">
+                    <input type="text" id="calc-early-in" class="time-calc-input" readonly dir="ltr" placeholder="00:00" data-title="الوقت">
+                </div>
+                <span>إلى 2.30 :</span>
+                <span id="calc-early-out" class="calc-red">00:00</span>
+            </div>
+        </div>
+    </section>
+
+    <section class="panel">
+        <h2>حضور متأخر</h2>
+        <div class="fields">
+            <div class="date-field tf"><input type="text" id="d-time" class="time-input" readonly dir="ltr" placeholder="00:00" data-title="الوقت"></div>
+            <div class="date-field"><span class="cap" id="cap-d-date">التاريخ</span><input type="text" id="d-date" class="date-input" readonly dir="ltr" aria-labelledby="cap-d-date"></div>
+            <p class="hintline wide">سيتم احتساب وقت الحضور تلقائياً من الساعة 7:30 ص</p>
+            <button class="btn-add" id="btn-add">إضافة</button>
+        </div>
+        <div class="table-container">
+            <div class="thead"><span>التاريخ</span><span>المدة</span><span>العدد</span></div>
+            <div id="delay-body"></div>
+            <p class="empty" id="delay-empty">لا توجد تأخيرات مسجّلة بعد</p>
+            <p class="hint" id="delay-hint" hidden>اسحب السجل من اليمين إلى اليسار لحذفه</p>
+        </div>
+    </section>
+
+    <section class="panel">
+        <h2>خروج مبكر</h2>
+        <div class="fields">
+            <div>
+                <label for="e-from">من</label>
+                <div class="date-field tf"><input type="text" id="e-from" class="time-input" readonly dir="ltr" placeholder="00:00"></div>
+            </div>
+            <div>
+                <label for="e-to">إلى</label>
+                <div class="date-field tf"><input type="text" id="e-to" class="time-input" readonly dir="ltr" placeholder="00:00"></div>
+            </div>
+            <div class="date-field wide"><span class="cap" id="cap-e-date">التاريخ</span><input type="text" id="e-date" class="date-input" readonly dir="ltr" aria-labelledby="cap-e-date"></div>
+            <button class="btn-add" id="btn-early">إضافة</button>
+        </div>
+        <div class="table-container">
+            <div class="thead"><span>التاريخ</span><span>المدة</span><span>العدد</span></div>
+            <div id="early-body"></div>
+            <p class="empty" id="early-empty">لا توجد سجلات خروج مبكر بعد</p>
+            <p class="hint" id="early-hint" hidden>اسحب السجل من اليمين إلى اليسار لحذفه</p>
+        </div>
+    </section>
+
+    <section class="panel">
+        <h2>نسيان بصمة</h2>
+        <div class="fields">
+            <div class="date-field kind"><span class="cap" id="cap-f-kind">نوع الحركة</span><select id="f-kind" aria-labelledby="cap-f-kind"><option value="" hidden selected></option><option value="حضور">حضور</option><option value="انصراف">انصراف</option></select></div>
+            <div class="date-field"><span class="cap" id="cap-f-date">التاريخ</span><input type="text" id="f-date" class="date-input" readonly dir="ltr" aria-labelledby="cap-f-date"></div>
+            <p class="hintline wide">لا يمكن تقديم أكثر من 4 طلبات في الشهر</p>
+            <button class="btn-add" id="btn-fp">إضافة</button>
+        </div>
+        <div class="table-container">
+            <div class="thead two"><span>التاريخ</span><span>نوع الحركة</span></div>
+            <div id="fp-body"></div>
+            <p class="empty" id="fp-empty">لا توجد سجلات نسيان بصمة بعد</p>
+            <p class="hint" id="fp-hint" hidden>اسحب السجل من اليمين إلى اليسار لحذفه</p>
+        </div>
+    </section>
+
+    <section class="panel">
+        <h2>الغياب</h2>
+        <div class="fields">
+            <div class="date-field typed"><span class="cap" id="cap-a-days">عدد الأيام</span><input type="text" id="a-days" class="num-input" inputmode="numeric" maxlength="2" autocomplete="off" aria-labelledby="cap-a-days"></div>
+            <div class="date-field"><span class="cap" id="cap-a-date">التاريخ</span><input type="text" id="a-date" class="date-input" readonly dir="ltr" aria-labelledby="cap-a-date"></div>
+            <button class="btn-add" id="btn-abs">إضافة</button>
+        </div>
+        <div class="table-container">
+            <div class="thead abs"><span>التاريخ</span><span>العدد</span></div>
+            <div id="abs-body"></div>
+            <p class="empty" id="abs-empty">لا توجد سجلات غياب بعد</p>
+            <p class="hint" id="abs-hint" hidden>اسحب السجل من اليمين إلى اليسار لحذفه</p>
+        </div>
+    </section>
+
+    <button class="btn-reset" id="btn-reset">حذف السجل</button>
+
+    <div class="version">Version 1.1.3</div>
+</main>
+
+<div class="overlay" id="cal-overlay" hidden>
+    <div class="cal" role="dialog" aria-modal="true">
+        <div class="cal-head">
+            <button type="button" class="nav" id="cal-next">&#8249;</button>
+            <span class="cal-title" id="cal-title"></span>
+            <button type="button" class="nav" id="cal-prev">&#8250;</button>
+        </div>
+        <div class="g7 cal-week"><span>ح</span><span>ن</span><span>ث</span><span>ر</span><span>خ</span><span>ج</span><span>س</span></div>
+        <div class="g7" id="cal-days"></div>
+        <div class="cal-foot">
+            <button type="button" id="cal-today">اليوم</button>
+            <button type="button" id="cal-clear">مسح</button>
+        </div>
+    </div>
+</div>
+
+<div class="overlay" id="clock-overlay" hidden>
+    <div class="cal clock" role="dialog" aria-modal="true">
+        <div class="clock-title" id="clock-title"></div>
+        <div class="clock-live" id="clock-live">08:00</div>
+        <div class="wheels">
+            <div class="wheel" id="w-h"></div>
+            <div class="colon">:</div>
+            <div class="wheel" id="w-m"></div>
+        </div>
+        <div class="cal-foot">
+            <button type="button" id="clock-ok">تم</button>
+            <button type="button" id="clock-clear">مسح</button>
+        </div>
+    </div>
+</div>
+
+<div class="overlay" id="notice-overlay" hidden>
+    <div class="cal notice" role="alertdialog" aria-modal="true">
+        <p>لقد استنفذت عدد الساعات المتاحة شهرياً بدون حسم وسيتم إضافة الساعات التي يمكنك تقديم استئذان لها</p>
+        <button type="button" class="btn-add" id="notice-ok">موافق</button>
+    </div>
+</div>
+
+<script src="script.js?v=1.1.3"></script>
+
+</body>
+</html>
