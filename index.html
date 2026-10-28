@@ -40,6 +40,28 @@
     <div id="error-log" class="error-msg" role="alert"></div>
 
     <section class="panel">
+        <h2>حاسبة الوقت</h2>
+        <div class="time-calc-table">
+            <div class="time-calc-row">
+                <span>حد الحضور المتأخر من 7:30 إلى</span>
+                <div class="time-calc-input-wrap">
+                    <input type="text" id="calc-late-in" class="time-calc-input" readonly dir="ltr" placeholder="00:00" data-title="الوقت">
+                </div>
+                <span>:</span>
+                <span id="calc-late-out" class="calc-red">00:00</span>
+            </div>
+            <div class="time-calc-row">
+                <span>حد الخروج المبكر من</span>
+                <div class="time-calc-input-wrap">
+                    <input type="text" id="calc-early-in" class="time-calc-input" readonly dir="ltr" placeholder="00:00" data-title="الوقت">
+                </div>
+                <span>إلى 2.30 :</span>
+                <span id="calc-early-out" class="calc-red">00:00</span>
+            </div>
+        </div>
+    </section>
+
+    <section class="panel">
         <h2>حضور متأخر</h2>
         <div class="fields">
             <div class="date-field tf"><input type="text" id="d-time" class="time-input" readonly dir="ltr" placeholder="00:00" data-title="الوقت"></div>
@@ -110,7 +132,7 @@
 
     <button class="btn-reset" id="btn-reset">حذف السجل</button>
 
-    <div class="version">Version 1.0.0</div>
+    <div class="version">Version 1.1.2</div>
 </main>
 
 <div class="overlay" id="cal-overlay" hidden>
