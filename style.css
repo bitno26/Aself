@@ -99,6 +99,24 @@ input:focus-visible, select:focus-visible, button:focus-visible { outline: 3px s
 .tf input { padding-inline: 26px; font-size: 1.2rem; font-weight: 700; letter-spacing: .06em; font-variant-numeric: tabular-nums; }
 .tf svg { width: 18px; height: 18px; }
 
+/* ===== Time calculator (table above the late-arrival panel) ===== */
+.time-calc-table { border: 1px solid var(--line); border-radius: 14px; overflow: hidden; }
+.time-calc-row { display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 4px 6px; padding: 10px 8px; text-align: center; font-size: .85rem; font-weight: 600; }
+.time-calc-row + .time-calc-row { border-top: 1px solid var(--line); }
+.time-calc-input-wrap { position: relative; display: inline-flex; flex: 0 0 auto; }
+.time-calc-input {
+    appearance: none; -webkit-appearance: none;
+    width: 117px; min-height: 42px;
+    padding: 4px 28px 4px 6px;
+    font: inherit; font-size: 1.05rem; font-weight: 700;
+    text-align: center; color: var(--ink);
+    background: var(--field); border: 1px solid var(--line); border-radius: 10px;
+    cursor: pointer; direction: ltr; font-variant-numeric: tabular-nums;
+}
+.time-calc-input-wrap svg { position: absolute; top: 50%; inset-inline-start: 7px; transform: translateY(-50%); width: 15px; height: 15px; color: var(--muted); pointer-events: none; }
+.calc-red { font-size: 1.05rem; font-weight: 700; color: var(--danger-ink); direction: ltr; font-variant-numeric: tabular-nums; }
+@media (max-width: 460px) { .time-calc-row > span:first-child { flex: 1 1 100%; } }
+
 /* ===== Tables (fixed, no inner scrolling; rows stack and the list grows) ===== */
 .table-container { margin-top: 14px; border: 1px solid var(--line); border-radius: 14px; overflow: hidden; }
 .thead, .row-in { display: grid; grid-template-columns: 1.1fr 1.3fr .8fr; text-align: center; }
