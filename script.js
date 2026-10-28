@@ -69,6 +69,36 @@ const clearField = id => {
 };
 
 // ===== Rendering =====
+// Clears the calculator fields and results (used on startup and after any deletion)
+function clearTimeCalc() {
+    ['calc-late-in', 'calc-early-in'].forEach(clearField);
+    if ($('calc-late-out')) $('calc-late-out').innerText = '00:00';
+    if ($('calc-early-out')) $('calc-early-out').innerText = '00:00';
+}
+
+function updateTimeCalc() {
+    const earlyEnd = 14 * 60 + 30;
+
+    if ($('calc-late-out')) $('calc-late-out').innerText = '00:00';
+    if ($('calc-early-out')) $('calc-early-out').innerText = '00:00';
+
+    const lateIn = readTime('calc-late-in');
+    if (lateIn !== null) {
+        const diff = lateIn - DAY_START;
+        if (diff >= 0) {
+            if ($('calc-late-out')) $('calc-late-out').innerText = hhmm(diff);
+        }
+    }
+
+    const earlyIn = readTime('calc-early-in');
+    if (earlyIn !== null) {
+        const diff = earlyEnd - earlyIn;
+        if (diff >= 0) {
+            if ($('calc-early-out')) $('calc-early-out').innerText = hhmm(diff);
+        }
+    }
+}
+
 function render() {
     const used = sumMinutes();
     const left = Math.max(0, TOTAL_MIN - used);
@@ -267,6 +297,7 @@ function resetAll() {
     disarmReset();
     entries = [];
     ['d-time', 'd-date', 'e-from', 'e-to', 'e-date', 'f-kind', 'f-date', 'a-days', 'a-date'].forEach(clearField);
+    clearTimeCalc();
     $('month-sel').value = new Date().getMonth();
     render();
     save();
@@ -301,6 +332,7 @@ function onSwipeEnd(e) {
             entries.splice(+row.dataset.i, 1);
             removing = false;
             render();
+            clearTimeCalc();
             save();
         }, 180);
     } else {
@@ -391,6 +423,7 @@ function confirmClock() {
     clockTarget.dataset.min = min;
     clockTarget.value = fmt12(min);
     clockTarget.parentElement.classList.add('filled');
+    updateTimeCalc();
     closeClock();
 }
 
@@ -400,6 +433,16 @@ document.querySelectorAll('.date-field:not(.typed)').forEach(f =>
 
 document.querySelectorAll('.date-input, .time-input').forEach(el => {
     const open = () => (el.classList.contains('time-input') ? openClock(el) : openCal(el));
+    el.addEventListener('click', open);
+    el.addEventListener('keydown', e => {
+        if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); open(); }
+    });
+});
+
+// Time calculator fields: same wheel popup, smaller fields
+document.querySelectorAll('.time-calc-input-wrap').forEach(w => w.insertAdjacentHTML('afterbegin', CLOCK_ICON));
+document.querySelectorAll('.time-calc-input').forEach(el => {
+    const open = () => openClock(el);
     el.addEventListener('click', open);
     el.addEventListener('keydown', e => {
         if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); open(); }
@@ -435,7 +478,7 @@ $('cal-days').addEventListener('click', e => {
     if (b) pickDate(b.dataset.v);
 });
 $('clock-ok').addEventListener('click', confirmClock);
-$('clock-clear').addEventListener('click', () => { clearField(clockTarget.id); closeClock(); });
+$('clock-clear').addEventListener('click', () => { clearField(clockTarget.id); updateTimeCalc(); closeClock(); });
 $('cal-overlay').addEventListener('click', e => { if (e.target === e.currentTarget) closeCal(); });
 $('clock-overlay').addEventListener('click', e => { if (e.target === e.currentTarget) closeClock(); });
 document.addEventListener('keydown', e => { if (e.key === 'Escape') { closeCal(); closeClock(); } });
@@ -450,6 +493,7 @@ try {
     const saved = JSON.parse(localStorage.getItem(KEY) || 'null');
     if (saved) applyState(saved);
 } catch (e) {}
+clearTimeCalc();
 render();
 
 // ===== PWA: keep saved entries from being cleaned up automatically, and work offline =====
