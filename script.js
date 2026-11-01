@@ -71,32 +71,23 @@ const clearField = id => {
 // ===== Rendering =====
 // Clears the calculator fields and results (used on startup and after any deletion)
 function clearTimeCalc() {
-    ['calc-late-in', 'calc-early-in'].forEach(clearField);
-    if ($('calc-late-out')) $('calc-late-out').innerText = '00:00';
-    if ($('calc-early-out')) $('calc-early-out').innerText = '00:00';
+    const mode = $('calc-mode');
+    if (mode) mode.value = '';
+    if ($('calc-in')) clearField('calc-in');
+    if ($('calc-out')) $('calc-out').innerText = '00:00';
 }
 
 function updateTimeCalc() {
-    const earlyEnd = 14 * 60 + 30;
-
-    if ($('calc-late-out')) $('calc-late-out').innerText = '00:00';
-    if ($('calc-early-out')) $('calc-early-out').innerText = '00:00';
-
-    const lateIn = readTime('calc-late-in');
-    if (lateIn !== null) {
-        const diff = lateIn - DAY_START;
-        if (diff >= 0) {
-            if ($('calc-late-out')) $('calc-late-out').innerText = hhmm(diff);
-        }
-    }
-
-    const earlyIn = readTime('calc-early-in');
-    if (earlyIn !== null) {
-        const diff = earlyEnd - earlyIn;
-        if (diff >= 0) {
-            if ($('calc-early-out')) $('calc-early-out').innerText = hhmm(diff);
-        }
-    }
+    const out = $('calc-out');
+    if (!out) return;
+    out.innerText = '00:00';
+    const mode = $('calc-mode') ? $('calc-mode').value : '';
+    const t = readTime('calc-in');
+    if (t === null) return;
+    let diff = null;
+    if (mode === 'late') diff = t - DAY_START;
+    else if (mode === 'early') diff = DAY_END - t;
+    if (diff !== null && diff >= 0) out.innerText = hhmm(diff);
 }
 
 function render() {
@@ -448,8 +439,11 @@ document.querySelectorAll('.time-calc-input').forEach(el => {
         if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); open(); }
     });
 });
+$('btn-calc-reset').addEventListener('click', clearTimeCalc);
+$('calc-mode').addEventListener('change', updateTimeCalc);
+$('calc-in').addEventListener('change', updateTimeCalc);
 
-$('month-sel').innerHTML = MONTHS.map((m, i) => `<option value="${i}">${m}</option>`).join('');
+$('month-sel').innerHTML = MONTHS.map((m, i) => `<option value="${i}">${String(i + 1).padStart(2, '0')} ${m}</option>`).join('');
 $('month-sel').value = new Date().getMonth();
 $('month-sel').addEventListener('change', save);
 
