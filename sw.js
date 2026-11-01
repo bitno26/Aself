@@ -1,6 +1,6 @@
 // Offline support for the attendance tracker: caches the static files only.
 // Entries live in the page's own storage (localStorage), so they are never touched here.
-const CACHE = 'attendance-1.1.3';   // change together with the version label to ship an update
+const CACHE = 'attendance-1.1.5';   // change together with the version label to ship an update
 const SHELL = ['./', 'index.html', 'style.css', 'script.js', 'manifest.webmanifest',
                'icons/icon-192.png', 'icons/icon-512.png', 'icons/icon-maskable-512.png', 'icons/apple-touch-icon.png'];
 
