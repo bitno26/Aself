@@ -12,7 +12,7 @@
 <meta name="apple-mobile-web-app-title" content="الحضور">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
 <title>سجل متابعة الحضور</title>
-<link rel="stylesheet" href="style.css?v=1.1.3">
+<link rel="stylesheet" href="style.css?v=1.1.5">
 </head>
 <body>
 
@@ -43,22 +43,19 @@
         <h2>حاسبة الوقت</h2>
         <div class="time-calc-table">
             <div class="time-calc-row">
-                <span>حد الحضور المتأخر من 7:30 إلى</span>
+                <select id="calc-mode" class="time-calc-select">
+                    <option value="">اختر</option>
+                    <option value="late">حضور متأخر</option>
+                    <option value="early">خروج مبكر</option>
+                </select>
                 <div class="time-calc-input-wrap">
-                    <input type="text" id="calc-late-in" class="time-calc-input" readonly dir="ltr" placeholder="00:00" data-title="الوقت">
+                    <input type="text" id="calc-in" class="time-calc-input" readonly dir="ltr" placeholder="00:00" data-title="الوقت">
                 </div>
                 <span>:</span>
-                <span id="calc-late-out" class="calc-red">00:00</span>
-            </div>
-            <div class="time-calc-row">
-                <span>حد الخروج المبكر من</span>
-                <div class="time-calc-input-wrap">
-                    <input type="text" id="calc-early-in" class="time-calc-input" readonly dir="ltr" placeholder="00:00" data-title="الوقت">
-                </div>
-                <span>إلى 2.30 :</span>
-                <span id="calc-early-out" class="calc-red">00:00</span>
+                <span id="calc-out" class="calc-red">00:00</span>
             </div>
         </div>
+        <button class="btn-calc-reset" id="btn-calc-reset">مسح</button>
     </section>
 
     <section class="panel">
@@ -132,7 +129,7 @@
 
     <button class="btn-reset" id="btn-reset">حذف السجل</button>
 
-    <div class="version">Version 1.1.3</div>
+    <div class="version">Version 1.1.5</div>
 </main>
 
 <div class="overlay" id="cal-overlay" hidden>
@@ -174,7 +171,7 @@
     </div>
 </div>
 
-<script src="script.js?v=1.1.3"></script>
+<script src="script.js?v=1.1.5"></script>
 
 </body>
 </html>
